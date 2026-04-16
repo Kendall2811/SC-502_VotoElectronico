@@ -1,68 +1,150 @@
-/* GENERAL */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
-body{
-background:#f4f6f9;
-min-height:100vh;
+:root {
+    --primary-color: #6366f1;
+    --primary-glow: rgba(99, 102, 241, 0.4);
+    --secondary-color: #8b5cf6;
+    --bg-gradient: linear-gradient(135deg, #020617 0%, #0f172a 50%, #1e1b4b 100%);
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
 }
 
-/* LOGIN */
-
-.login-container{
-max-width:900px;
-width:100%;
-margin:auto;
+body {
+    background: var(--bg-gradient);
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-main);
+    min-height: 100vh;
+    margin: 0;
+    overflow-x: hidden;
 }
 
-.left-panel{
-background:linear-gradient(135deg,#0d6efd,#4f46e5);
-color:white;
-padding:40px;
-border-radius:12px 0 0 12px;
-display:flex;
-flex-direction:column;
-justify-content:center;
+/* Scrollbar personalizada */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* --- GLASSMORPHISM COMPONENTS --- */
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    color: var(--text-main);
 }
 
-.right-panel{
-background:white;
-padding:40px;
-border-radius:0 12px 12px 0;
+.glass-hover {
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.vote-icon{
-font-size:60px;
-margin-bottom:20px;
+.glass-hover:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 40px var(--primary-glow);
+    border-color: rgba(99, 102, 241, 0.3);
+    background: rgba(255, 255, 255, 0.05);
 }
 
-.nav-tabs .nav-link{
-font-weight:500;
+/* Inputs de Cristal */
+.glass-input {
+    background: rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    color: var(--text-main) !important;
+    border-radius: 12px;
+    padding: 0.75rem 1rem;
+    transition: all 0.3s ease;
 }
 
-.form-control:focus{
-box-shadow:none;
-border-color:#0d6efd;
+.glass-input::placeholder {
+    color: rgba(255,255,255,0.3);
 }
 
-
-/* HEADER (otras páginas del sistema) */
-
-.header{
-background:linear-gradient(135deg,#0d6efd,#6610f2);
-color:white;
-padding:25px;
-border-radius:10px;
-margin-bottom:30px;
+.glass-input:focus {
+    outline: none;
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 15px var(--primary-glow) !important;
+    background: rgba(0, 0, 0, 0.4) !important;
 }
 
-
-/* TARJETAS DE CANDIDATOS */
-
-.candidate-card{
-transition:0.2s;
-cursor:pointer;
+/* Selects Especiales (Fix HTML selects in dark mode) */
+select.glass-input option {
+    background: #0f172a;
+    color: white;
 }
 
-.candidate-card:hover{
-transform:scale(1.03);
-box-shadow:0 5px 15px rgba(0,0,0,0.15);
+/* Botones Futuristas */
+.btn-glass {
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.btn-glass:hover {
+    transform: scale(1.05);
+    color: white;
+    box-shadow: 0 0 20px var(--primary-glow);
+}
+
+.btn-outline-glass {
+    background: transparent;
+    border: 1px solid var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 12px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-glass:hover {
+    background: var(--primary-color);
+    color: white;
+    box-shadow: 0 0 15px var(--primary-glow);
+}
+
+/* Layout Utilidades */
+.header-title {
+    font-weight: 700;
+    background: -webkit-linear-gradient(45deg, #60a5fa, #c084fc);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Iconos Gigantes */
+.giant-icon {
+    font-size: 3.5rem;
+    background: -webkit-linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Tablas */
+.table-glass {
+    color: var(--text-main);
+    border-color: rgba(255,255,255,0.05);
+}
+.table-glass th {
+    border-bottom: 2px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    font-weight: 500;
+}
+.table-glass td {
+    background: transparent !important;
+    border-color: rgba(255,255,255,0.05);
+}
+
+/* Formularios de Login */
+.login-split {
+    min-height: 70vh;
+    display: flex;
+}
+.auth-panel {
+    background: transparent;
 }

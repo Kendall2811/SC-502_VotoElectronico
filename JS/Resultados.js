@@ -1,26 +1,40 @@
-const tabla = document.getElementById("tablaResultados");
+document.addEventListener("DOMContentLoaded", function(){
 
-let elecciones = JSON.parse(localStorage.getItem("elecciones")) || [];
+    const tabla = document.getElementById("tablaResultados");
+    // Also clear static rows from HTML if any exists
+    tabla.innerHTML = "";
 
-function mostrarResultados(){
+    async function mostrarResultados() {
+        try {
+            const res = await fetch("api.php?controller=Voto&action=resultados");
+            const data = await res.json();
 
-tabla.innerHTML = "";
+            if(!data.records || data.records.length === 0) {
+                tabla.innerHTML = "<tr><td colspan='2' class='text-center text-muted'>Aún no hay resultados de votos.</td></tr>";
+                return;
+            }
 
-elecciones.forEach(eleccion=>{
+            data.records.forEach(resultado => {
+                let fila = document.createElement("tr");
 
-let fila = document.createElement("tr");
+                // resultado object has: eleccion, candidato, partido, votos
+                fila.innerHTML = `
+                    <td>
+                        <strong>${resultado.candidato} (${resultado.partido})</strong><br/>
+                        <small class="text-muted">${resultado.eleccion}</small>
+                    </td>
+                    <td class="align-middle fw-bold text-primary fs-5">
+                        ${resultado.votos}
+                    </td>
+                `;
+                tabla.appendChild(fila);
+            });
 
-fila.innerHTML = `
+        } catch(err) {
+            console.error("Error cargando resultados", err);
+            tabla.innerHTML = "<tr><td colspan='2' class='text-danger'>Error de red al cargar resultados.</td></tr>";
+        }
+    }
 
-<td>${eleccion.nombre}</td>
-<td>${eleccion.votos}</td>
-
-`;
-
-tabla.appendChild(fila);
-
+    mostrarResultados();
 });
-
-}
-
-mostrarResultados();

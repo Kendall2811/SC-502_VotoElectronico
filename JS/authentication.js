@@ -5,27 +5,39 @@
 const loginForm = document.getElementById('loginform');
 const loginError = document.getElementById('login-error');
 
-loginForm.addEventListener('submit', function(e){
+loginForm.addEventListener('submit', async function(e){
 
-e.preventDefault();
+    e.preventDefault();
 
-const user = document.getElementById('user').value;
-const password = document.getElementById('password').value;
+    const user = document.getElementById('user').value;
+    const password = document.getElementById('password').value;
 
-// obtener datos guardados
-const savedUser = localStorage.getItem("userEmail");
-const savedPass = localStorage.getItem("userPassword");
+    try {
+        const response = await fetch('api.php?controller=Usuario&action=login', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ correo: user, password: password })
+        });
 
-if(user === savedUser && password === savedPass){
+        const data = await response.json();
 
-window.location.href = "index.html";
-
-}else{
-
-loginError.style.display = "block";
-
-}
-
+        if(response.ok){
+            // Guardar info de sesion básica
+            sessionStorage.setItem("userId", data.id);
+            sessionStorage.setItem("userName", data.nombre);
+            sessionStorage.setItem("userRol", data.rol);
+            window.location.href = "index.html";
+        }else{
+            loginError.innerText = data.message || "Credenciales inválidas";
+            loginError.style.display = "block";
+        }
+    } catch(err) {
+        console.error(err);
+        loginError.innerText = "Error de conexión al servidor";
+        loginError.style.display = "block";
+    }
 });
 
 
@@ -38,50 +50,55 @@ const registerForm = document.getElementById('registerform');
 const registerError = document.getElementById('register-error');
 const registerSuccess = document.getElementById('register-success');
 
-registerForm.addEventListener('submit', function(e){
+registerForm.addEventListener('submit', async function(e){
 
-e.preventDefault();
+    e.preventDefault();
 
-const name = document.getElementById('name').value;
-const email = document.getElementById('email').value;
-const password = document.getElementById('register-password').value;
-const confirmPassword = document.getElementById('register-password-confirm').value;
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('register-password').value;
+    const confirmPassword = document.getElementById('register-password-confirm').value;
 
+    // validar contraseñas
+    if(password !== confirmPassword){
+        registerError.innerHTML = "Las contraseñas no coinciden";
+        registerError.style.display = "block";
+        registerSuccess.style.display = "none";
+        return;
+    }
 
-// validar contraseñas
+    try {
+        const response = await fetch('api.php?controller=Usuario&action=registrar', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ nombre: name, correo: email, password: password })
+        });
 
-if(password !== confirmPassword){
+        const data = await response.json();
 
-registerError.innerHTML = "Las contraseñas no coinciden";
-registerError.style.display = "block";
-registerSuccess.style.display = "none";
+        if(response.ok) {
+            // mostrar mensaje
+            registerError.style.display = "none";
+            registerSuccess.innerHTML = data.message || "Registrado con éxito";
+            registerSuccess.style.display = "block";
 
-return;
-
-}
-
-
-// guardar usuario en LocalStorage
-
-localStorage.setItem("userName", name);
-localStorage.setItem("userEmail", email);
-localStorage.setItem("userPassword", password);
-
-
-// mostrar mensaje
-
-registerError.style.display = "none";
-registerSuccess.style.display = "block";
-
-
-// cambiar a login automaticamente
-
-setTimeout(() => {
-
-const loginTab = document.querySelector('[data-bs-target="#login"]');
-loginTab.click();
-
-},1500);
+            // cambiar a login automaticamente
+            setTimeout(() => {
+                const loginTab = document.querySelector('[data-bs-target="#login"]');
+                loginTab.click();
+            }, 1500);
+        } else {
+            registerError.innerHTML = data.message || "Error al registrarse";
+            registerError.style.display = "block";
+            registerSuccess.style.display = "none";
+        }
+    } catch(err) {
+        console.error(err);
+        registerError.innerHTML = "Error de conexión al servidor";
+        registerError.style.display = "block";
+    }
 
 });
 

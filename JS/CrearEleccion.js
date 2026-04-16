@@ -1,30 +1,44 @@
 const form = document.querySelector("form");
 
-form.addEventListener("submit", function(e){
+form.addEventListener("submit", async function(e){
 
-e.preventDefault();
+    e.preventDefault();
 
-let nombre = document.querySelector("input[type='text']").value;
-let fechas = document.querySelectorAll("input[type='date']");
+    let nombre = document.querySelector("input[type='text']").value;
+    // Asumiremos que descripcion no existía en el repo viejo pero lo pide el endpoint, agregaremos un fallback
+    let descripcionElement = document.querySelector("textarea") || document.querySelectorAll("input[type='text']")[1];
+    let descripcion = descripcionElement ? descripcionElement.value : "Sin descripción";
+    
+    let fechas = document.querySelectorAll("input[type='date']");
 
-let inicio = fechas[0].value;
-let fin = fechas[1].value;
+    let inicio = fechas[0].value;
+    let fin = fechas[1].value;
 
-let elecciones = JSON.parse(localStorage.getItem("elecciones")) || [];
+    try {
+        const response = await fetch('api.php?controller=Eleccion&action=crear', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                nombre: nombre,
+                descripcion: descripcion,
+                fecha_inicio: inicio,
+                fecha_fin: fin
+            })
+        });
 
-let nuevaEleccion = {
-nombre:nombre,
-inicio:inicio,
-fin:fin,
-votos:0
-};
+        const data = await response.json();
 
-elecciones.push(nuevaEleccion);
-
-localStorage.setItem("elecciones",JSON.stringify(elecciones));
-
-alert("Elección creada correctamente");
-
-form.reset();
+        if(response.ok) {
+            alert(data.message || "Elección creada correctamente");
+            form.reset();
+        } else {
+            alert(data.message || "Error al crear la elección");
+        }
+    } catch(err) {
+        console.error(err);
+        alert("Error de conexión al servidor");
+    }
 
 });

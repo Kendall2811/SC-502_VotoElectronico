@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS `candidatos` (
   CONSTRAINT `fk_eleccion` FOREIGN KEY (`eleccion_id`) REFERENCES `elecciones` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+ALTER TABLE `candidatos` ADD COLUMN `apellido` varchar(100) NOT NULL AFTER `nombre`;
+
 CREATE TABLE IF NOT EXISTS `votos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `usuario_id` int(11) NOT NULL,

@@ -11,9 +11,8 @@ class EleccionController {
     public function crear() {
         $data = json_decode(file_get_contents("php://input"));
 
-        if(!empty($data->nombre) && !empty($data->descripcion) && !empty($data->fecha_inicio) && !empty($data->fecha_fin)) {
+        if(!empty($data->nombre) && !empty($data->fecha_inicio) && !empty($data->fecha_fin)) {
             $this->eleccion->nombre = $data->nombre;
-            $this->eleccion->descripcion = $data->descripcion;
             $this->eleccion->fecha_inicio = $data->fecha_inicio;
             $this->eleccion->fecha_fin = $data->fecha_fin;
 
@@ -43,7 +42,6 @@ class EleccionController {
                 $eleccion_item = array(
                     "id" => $id,
                     "nombre" => $nombre,
-                    "descripcion" => html_entity_decode($descripcion),
                     "fecha_inicio" => $fecha_inicio,
                     "fecha_fin" => $fecha_fin
                 );

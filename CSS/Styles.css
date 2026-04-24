@@ -136,6 +136,7 @@ select.glass-input option {
     font-weight: 500;
 }
 .table-glass td {
+    color: var(--text-main);
     background: transparent !important;
     border-color: rgba(255,255,255,0.05);
 }

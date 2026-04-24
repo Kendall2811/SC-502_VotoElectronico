@@ -5,9 +5,11 @@ class Database {
     private $username = "root";
     private $password = "";
     public $conn;
+    public $errorMessage;
 
     public function getConnection() {
         $this->conn = null;
+        $this->errorMessage = null;
 
         try {
             // Se utiliza PDO para mejorar la seguridad frente a SQL Injections.
@@ -17,7 +19,7 @@ class Database {
             // Habilitar excepciones para los errores de la DB
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         } catch(PDOException $exception) {
-            echo "Error de conexión: " . $exception->getMessage();
+            $this->errorMessage = $exception->getMessage();
         }
 
         return $this->conn;

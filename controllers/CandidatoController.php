@@ -11,8 +11,9 @@ class CandidatoController {
     public function registrar() {
         $data = json_decode(file_get_contents("php://input"));
 
-        if(!empty($data->nombre) && !empty($data->partido) && !empty($data->eleccion_id)) {
+        if(!empty($data->nombre) && !empty($data->apellido) && !empty($data->partido) && !empty($data->eleccion_id)) {
             $this->candidato->nombre = $data->nombre;
+            $this->candidato->apellido = $data->apellido;
             $this->candidato->partido = $data->partido;
             $this->candidato->eleccion_id = $data->eleccion_id;
 

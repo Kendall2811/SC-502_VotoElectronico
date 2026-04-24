@@ -2,9 +2,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Cargar elecciones
     try {
         const res = await fetch("api.php?controller=Eleccion&action=leer");
-        const data = await res.json();
+        const text = await res.text();
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            console.error("Respuesta no JSON:", text);
+            alert("Error del servidor: " + text);
+            return;
+        }
+
         const select = document.getElementById("selectEleccion");
-        
+
         if (data.records && data.records.length > 0) {
             data.records.forEach(eleccion => {
                 const opt = document.createElement("option");
@@ -12,9 +22,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 opt.textContent = eleccion.nombre;
                 select.appendChild(opt);
             });
+        } else {
+            console.log("No hay elecciones activas");
         }
     } catch(err) {
         console.error("Error al cargar elecciones", err);
+        alert("Error de conexión al servidor");
     }
 });
 
@@ -45,7 +58,14 @@ document.querySelector("form").addEventListener("submit", async function(e){
             })
         });
 
-        const data = await response.json();
+        const text = await response.text();
+        let data;
+
+        try {
+            data = JSON.parse(text);
+        } catch (parseError) {
+            data = { message: text || "Respuesta no válida del servidor" };
+        }
 
         if(response.ok) {
             alert(data.message || "Candidato registrado correctamente");

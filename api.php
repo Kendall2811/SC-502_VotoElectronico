@@ -32,6 +32,12 @@ $actionName = isset($_GET['action']) ? $_GET['action'] : '';
 $database = new Database();
 $db = $database->getConnection();
 
+if (!$db) {
+    http_response_code(500);
+    echo json_encode(["message" => "Error de conexión con la base de datos"]);
+    exit();
+}
+
 if (!$controllerName || !$actionName) {
     echo json_encode(["message" => "Endpoint no válido"]);
     exit();
